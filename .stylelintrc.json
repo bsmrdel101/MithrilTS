@@ -1,8 +1,0 @@
-{
-  "extends": "stylelint-config-standard",
-  "customSyntax": "postcss-scss",
-  "rules": {
-    "import-notation": null,
-    "color-function-notation": null
-  }
-}
