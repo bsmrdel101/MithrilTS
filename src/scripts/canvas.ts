@@ -1,3 +1,4 @@
+import { gameObjectManager } from "./engine/components/gameObjectManager";
 import sampleScene from "./scenes/sampleScene";
 
 export let canvas: HTMLCanvasElement;
@@ -26,6 +27,8 @@ export const initializeCanvas = () => {
 
 const drawFrame = () => {
   if (selectedScene) selectedScene.sceneLoader();
+  const collidableObjects = gameObjectManager.getCollidableObjects();
+  collidableObjects.forEach((object) => object.update(collidableObjects));
   updateFunctions.forEach((fn) => fn());
   renderFunctions.forEach((fn) => fn());
   window.requestAnimationFrame(drawFrame);
