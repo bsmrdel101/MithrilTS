@@ -10,7 +10,13 @@ export const createSpriteRect = (pos: Coord, scale: Scale, color: string, img?: 
     img: img,
     draw: function() {
       ctx.fillStyle = this.color;
-      ctx.fillRect(this.pos.x, this.pos.y, this.scale.w, this.scale.h);
+      if (this.img) {
+        const img = new Image();
+        img.src = this.img;
+        ctx.drawImage(img, this.pos.x, this.pos.y, this.scale.w, this.scale.h);
+      } else {
+        ctx.fillRect(this.pos.x, this.pos.y, this.scale.w, this.scale.h);
+      }
     },
     destroy: function() {
       ctx.clearRect(this.pos.x, this.pos.y, this.scale.w, this.scale.h);
