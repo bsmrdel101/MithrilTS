@@ -3,6 +3,7 @@ import sampleScene from "./scenes/sampleScene";
 
 export let canvas: HTMLCanvasElement;
 export let ctx: CanvasRenderingContext2D;
+const global = (window as any);
 let selectedScene: any;
 
 let updateFunctions: Array<() => void> = [];
@@ -35,33 +36,41 @@ const drawFrame = () => {
 };
 
 // Scene functions
-export const update = (fn: () => void) => {
+const update = (fn: () => void) => {
   updateFunctions.push(fn);
 };
 
-export const render = (fn: () => void) => {
+const render = (fn: () => void) => {
   renderFunctions.push(fn);
 };
 
 // Handle event detection
-const handleCanvasEvent = (event: Event) => {
+const handleCanvasEvent = (event: Event | KeyboardEvent) => {
   const eventType = event.type;
   if (eventHandlers[eventType]) {
     eventHandlers[eventType].forEach((handler) => handler(event));
   }
 };
 
-export const onEvent = (eventType: string, fn: (event: Event) => void) => {
+const onEvent = (
+  eventType: 'click' | 'dblclick'| 'mousemove'| 'keydown'| 'keyup'| 'wheel',
+  fn: (event: Event) => void
+) => {
   if (!eventHandlers[eventType]) {
     eventHandlers[eventType] = [];
   }
   eventHandlers[eventType].push(fn);
 };
 
-export const setSelectedScene = (scene: any) => selectedScene = scene;
+const setSelectedScene = (scene: any) => selectedScene = scene;
 
 export const setBackgroundColor = (color: string) => {
   ctx.fillStyle = color;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
 
+global.update = update;
+global.render = render;
+global.onEvent = onEvent;
+global.setSelectedScene = setSelectedScene;
+global.setBackgroundColor = setBackgroundColor;

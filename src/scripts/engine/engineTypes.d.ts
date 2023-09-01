@@ -1,14 +1,18 @@
-export type Coord = {
+declare const update: any;
+declare const render: any;
+declare const onEvent: any;
+
+type Coord = {
   x: number
   y: number
 };
 
-export type Scale = {
+type Scale = {
   w: number
   h: number
 };
 
-export type Sprite = {
+type Sprite = {
   pos: Coord
   scale: Scale
   color: string

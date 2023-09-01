@@ -1,4 +1,3 @@
-import { Coord, Sprite } from "../engineTypes";
 import { gameObjectManager } from "./gameObjectManager";
 
 
@@ -6,7 +5,8 @@ export class GameObject {
   sprite: Sprite;
   hasGravity = false;
   canCollide = true;
-  weight = 0.3;
+  canTrigger = false;
+  weight = 0.15;
   velocity: Coord = { x: 0, y: 0 };
 
   private isColliding = false;
