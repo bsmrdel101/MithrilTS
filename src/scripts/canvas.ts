@@ -15,7 +15,8 @@ export const initializeCanvas = () => {
   canvas = document.getElementById('canvas') as HTMLCanvasElement;
   ctx = canvas.getContext('2d');
   setSelectedScene(sampleScene()); // Set initial scene here
-
+  
+  resizeCanvas();
   canvas.addEventListener('click', handleCanvasEvent);
   canvas.addEventListener('dblclick', handleCanvasEvent);
   canvas.addEventListener('mousemove', handleCanvasEvent);
@@ -35,6 +36,12 @@ const drawFrame = () => {
   window.requestAnimationFrame(drawFrame);
 };
 
+const resizeCanvas = () => {
+  const aspectRatio = 16 / 9;
+  canvas.width *= aspectRatio - canvas.clientWidth;
+  canvas.height *= aspectRatio - canvas.clientHeight;
+};
+
 // Scene functions
 const update = (fn: () => void) => {
   updateFunctions.push(fn);
@@ -52,10 +59,7 @@ const handleCanvasEvent = (event: Event | KeyboardEvent) => {
   }
 };
 
-const onEvent = (
-  eventType: 'click' | 'dblclick'| 'mousemove'| 'keydown'| 'keyup'| 'wheel',
-  fn: (event: Event) => void
-) => {
+const onEvent = (eventType: string, fn: (event: Event) => void) => {
   if (!eventHandlers[eventType]) {
     eventHandlers[eventType] = [];
   }

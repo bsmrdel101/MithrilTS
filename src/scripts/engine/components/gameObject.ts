@@ -1,6 +1,9 @@
 import { gameObjectManager } from "./gameObjectManager";
 
-export const GameObject = (sprite: ImgSprite | BoxSprite | CirSprite | TriSprite | LineSprite | PolySprite): GameObject => {
+export const GameObject = (
+  sprite: ImgSprite | BoxSprite | CirSprite | TriSprite | LineSprite | PolySprite,
+  collider: BoxCol | CirCol | PolyCol | null
+): GameObject => {
   let hasGravity = false;
   let canCollide = true;
   let canTrigger = false;
@@ -17,36 +20,64 @@ export const GameObject = (sprite: ImgSprite | BoxSprite | CirSprite | TriSprite
     }
   };
 
-  const collidesWith = (otherObject: GameObject) => {
+  const collidingWith = (otherObject: GameObject) => {
     if (!canCollide || !otherObject.canCollide) {
       return false;
     }
 
-    const thisBoundingBox = {
-      x: sprite.pos.x,
-      y: sprite.pos.y,
-      width: 'scale' in sprite ? sprite.scale.x : 0,
-      height: 'scale' in sprite ? sprite.scale.y : 0,
-    };
+    // Use the provided collider for collision detection
+    if (collider && otherObject.collider) {
+      if (collider.type === 'box') {
+        const thisBoundingBox = {
+          x: sprite.pos.x,
+          y: sprite.pos.y,
+          width: 'scale' in sprite ? sprite.scale.x : 0,
+          height: 'scale' in sprite ? sprite.scale.y : 0,
+        };
+    
+        const otherBoundingBox = {
+          x: otherObject.sprite.pos.x,
+          y: otherObject.sprite.pos.y,
+          width: 'scale' in otherObject.sprite ? otherObject.sprite.scale.x : 0,
+          height: 'scale' in otherObject.sprite ? otherObject.sprite.scale.y : 0,
+        };
+    
+        return (
+          thisBoundingBox.x < otherBoundingBox.x + otherBoundingBox.width &&
+          thisBoundingBox.x + thisBoundingBox.width > otherBoundingBox.x &&
+          thisBoundingBox.y < otherBoundingBox.y + otherBoundingBox.height &&
+          thisBoundingBox.y + thisBoundingBox.height > otherBoundingBox.y
+        );
+      }
+    }
 
-    const otherBoundingBox = {
-      x: otherObject.sprite.pos.x,
-      y: otherObject.sprite.pos.y,
-      width: 'scale' in otherObject.sprite ? otherObject.sprite.scale.x : 0,
-      height: 'scale' in otherObject.sprite ? otherObject.sprite.scale.y : 0,
-    };
-
-    return (
-      thisBoundingBox.x < otherBoundingBox.x + otherBoundingBox.width &&
-      thisBoundingBox.x + thisBoundingBox.width > otherBoundingBox.x &&
-      thisBoundingBox.y < otherBoundingBox.y + otherBoundingBox.height &&
-      thisBoundingBox.y + thisBoundingBox.height > otherBoundingBox.y
-    );
+    return false;
   };
 
   const handleCollision = (otherObject: GameObject) => {
-    if (collidesWith(otherObject)) {
-      velocity.y = -velocity.y * 0.5; // Reverse and reduce velocity
+    if (collidingWith(otherObject)) {
+      // Calculate the overlap between the player and the collider
+      const overlapX = Math.min(sprite.pos.x + sprite.scale.x - otherObject.sprite.pos.x, otherObject.sprite.pos.x + otherObject.sprite.scale.x - sprite.pos.x);
+      const overlapY = Math.min(sprite.pos.y + sprite.scale.y - otherObject.sprite.pos.y, otherObject.sprite.pos.y + otherObject.sprite.scale.y - sprite.pos.y);
+  
+      // Resolve the collision by moving the player out of the collider
+      if (overlapX < overlapY) {
+        // Resolve horizontally
+        if (sprite.pos.x < otherObject.sprite.pos.x) {
+          sprite.pos.x -= overlapX;
+        } else {
+          sprite.pos.x += overlapX;
+        }
+        velocity.x = 0;
+      } else {
+        // Resolve vertically
+        if (sprite.pos.y < otherObject.sprite.pos.y) {
+          sprite.pos.y -= overlapY;
+        } else {
+          sprite.pos.y += overlapY;
+        }
+        velocity.y = 0;
+      }
     }
   };
 
@@ -55,7 +86,7 @@ export const GameObject = (sprite: ImgSprite | BoxSprite | CirSprite | TriSprite
 
     // Check for collisions with other objects
     collidableObjects.forEach((object) => {
-      if (object !== gameObject && collidesWith(object)) {
+      if (object !== gameObject && collidingWith(object)) {
         handleCollision(object);
         isColliding = true;
       } else {
@@ -75,7 +106,7 @@ export const GameObject = (sprite: ImgSprite | BoxSprite | CirSprite | TriSprite
 
   const gameObject: GameObject = {
     sprite,
-    collider: null,
+    collider,
     hasGravity,
     canCollide,
     canTrigger,

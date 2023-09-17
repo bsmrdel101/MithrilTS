@@ -58,7 +58,6 @@ type BoxSprite = {
 type CirSprite = {
   pos: Coord
   scale: Scale
-  radius: number
   startAngle: number
   color: string
   border: Border
@@ -68,8 +67,8 @@ type CirSprite = {
 
 type TriSprite = {
   pos: Coord
-  points: [Coord, Coord, Coord]
   scale: Scale
+  points: [Coord, Coord, Coord]
   rotation: number
   color: string
   border: Border
@@ -79,8 +78,8 @@ type TriSprite = {
 
 type LineSprite = {
   pos: Coord
-  points: [Coord, Coord]
   scale: Scale
+  points: [Coord, Coord]
   rotation: number
   thickness: number
   color: string
@@ -90,8 +89,8 @@ type LineSprite = {
 
 type PolySprite = {
   pos: Coord
-  points: Coord[]
   scale: Scale
+  points: Coord[]
   rotation: number
   thickness: number
   color: string
@@ -100,16 +99,19 @@ type PolySprite = {
 };
 
 type BoxCol = {
+  type: 'box' | 'cir' | 'poly'
   offset: Coord
   scale: Scale
 };
 
 type CirCol = {
+  type: 'box' | 'cir' | 'poly'
   offset: Coord
   radius: number
 };
 
 type PolyCol = {
+  type: 'box' | 'cir' | 'poly'
   offset: Coord
   points: Coord[]
 };
