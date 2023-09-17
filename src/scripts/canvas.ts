@@ -3,7 +3,7 @@ import sampleScene from "./scenes/sampleScene";
 
 export let canvas: HTMLCanvasElement;
 export let ctx: CanvasRenderingContext2D;
-const global = (window as any);
+export const globals = (window as any);
 let selectedScene: any;
 
 let updateFunctions: Array<() => void> = [];
@@ -29,7 +29,7 @@ export const initializeCanvas = () => {
 const drawFrame = () => {
   if (selectedScene) selectedScene.sceneLoader();
   const collidableObjects = gameObjectManager.getCollidableObjects();
-  collidableObjects.forEach((object) => object.update(collidableObjects));
+  collidableObjects.forEach((obj: GameObject) => obj.update(collidableObjects));
   updateFunctions.forEach((fn) => fn());
   renderFunctions.forEach((fn) => fn());
   window.requestAnimationFrame(drawFrame);
@@ -69,8 +69,8 @@ export const setBackgroundColor = (color: string) => {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
 
-global.update = update;
-global.render = render;
-global.onEvent = onEvent;
-global.setSelectedScene = setSelectedScene;
-global.setBackgroundColor = setBackgroundColor;
+globals.update = update;
+globals.render = render;
+globals.onEvent = onEvent;
+globals.setSelectedScene = setSelectedScene;
+globals.setBackgroundColor = setBackgroundColor;

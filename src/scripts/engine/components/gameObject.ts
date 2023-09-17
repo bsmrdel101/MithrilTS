@@ -1,47 +1,39 @@
 import { gameObjectManager } from "./gameObjectManager";
 
+export const GameObject = (sprite: ImgSprite | BoxSprite | CirSprite | TriSprite | LineSprite | PolySprite): GameObject => {
+  let hasGravity = false;
+  let canCollide = true;
+  let canTrigger = false;
+  let weight = 0.15;
+  let velocity: Coord = { x: 0, y: 0 };
+  let isColliding = false;
 
-export class GameObject {
-  sprite: Sprite;
-  hasGravity = false;
-  canCollide = true;
-  canTrigger = false;
-  weight = 0.15;
-  velocity: Coord = { x: 0, y: 0 };
-
-  private isColliding = false;
-
-  constructor(sprite: Sprite) {
-    this.sprite = sprite;
-    gameObjectManager.add(this);
-  }
-
-  private applyGravity() {
-    if (this.hasGravity && !this.isColliding) {    
+  const applyGravity = () => {
+    if (gameObject.hasGravity && !isColliding) {
       // Update the position based on velocity
-      this.sprite.pos.x += this.velocity.x;
-      this.sprite.pos.y += this.velocity.y;
-      this.velocity.y += this.weight;
+      sprite.pos.x += velocity.x;
+      sprite.pos.y += velocity.y;
+      velocity.y += weight;
     }
-  }
+  };
 
-  private collidesWith(otherObject: GameObject) {
-    if (!this.canCollide || !otherObject.canCollide) {
+  const collidesWith = (otherObject: GameObject) => {
+    if (!canCollide || !otherObject.canCollide) {
       return false;
     }
 
     const thisBoundingBox = {
-      x: this.sprite.pos.x,
-      y: this.sprite.pos.y,
-      width: this.sprite.scale.w,
-      height: this.sprite.scale.h
+      x: sprite.pos.x,
+      y: sprite.pos.y,
+      width: 'scale' in sprite ? sprite.scale.x : 0,
+      height: 'scale' in sprite ? sprite.scale.y : 0,
     };
 
     const otherBoundingBox = {
       x: otherObject.sprite.pos.x,
       y: otherObject.sprite.pos.y,
-      width: otherObject.sprite.scale.w,
-      height: otherObject.sprite.scale.h
+      width: 'scale' in otherObject.sprite ? otherObject.sprite.scale.x : 0,
+      height: 'scale' in otherObject.sprite ? otherObject.sprite.scale.y : 0,
     };
 
     return (
@@ -50,34 +42,53 @@ export class GameObject {
       thisBoundingBox.y < otherBoundingBox.y + otherBoundingBox.height &&
       thisBoundingBox.y + thisBoundingBox.height > otherBoundingBox.y
     );
-  }
+  };
 
-  private handleCollision(otherObject: GameObject) {
-    if (this.collidesWith(otherObject)) {
-      this.velocity.y = -this.velocity.y * 0.5; // Reverse and reduce velocity
+  const handleCollision = (otherObject: GameObject) => {
+    if (collidesWith(otherObject)) {
+      velocity.y = -velocity.y * 0.5; // Reverse and reduce velocity
     }
-  }
+  };
 
-  update(objects: GameObject[]) {
-    const collidableObjects = objects.filter(object => object !== this && object.canCollide);
+  const update = (objects: GameObject[]) => {
+    const collidableObjects = objects.filter((object) => object !== gameObject && object.canCollide);
 
     // Check for collisions with other objects
     collidableObjects.forEach((object) => {
-      if (object !== this && this.collidesWith(object)) {
-        this.handleCollision(object);
-        this.isColliding = true;
+      if (object !== gameObject && collidesWith(object)) {
+        handleCollision(object);
+        isColliding = true;
       } else {
-        this.isColliding = false;
+        isColliding = false;
       }
     });
-  }
+  };
 
-  draw() {
-    this.applyGravity();
-    this.sprite.draw();
-  }
+  const draw = () => {
+    applyGravity();
+    sprite.draw();
+  };
 
-  destroy() {
-    this.sprite.destroy();
-  }
-}
+  const destroy = () => {
+    sprite.destroy();
+  };
+
+  const gameObject: GameObject = {
+    sprite,
+    collider: null,
+    hasGravity,
+    canCollide,
+    canTrigger,
+    weight,
+    velocity,
+    onClick: () => {},
+    onCol: () => {},
+    onTrig: () => {},
+    update,
+    draw,
+    destroy,
+  };
+
+  gameObjectManager.add(gameObject);
+  return gameObject;
+};

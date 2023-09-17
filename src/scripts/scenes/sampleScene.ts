@@ -1,6 +1,6 @@
 import { canvas, setBackgroundColor } from "../canvas";
 import { GameObject } from "../engine/components/gameObject";
-import { createSpriteRect } from "../engine/components/spriteConstructor";
+import { BoxSprite } from "../engine/components/spriteConstructor";
 
 
 export default function sampleScene() {
@@ -16,10 +16,10 @@ export default function sampleScene() {
   });
 
 
-  const player = new GameObject(createSpriteRect({ x: canvas.width / 2, y: canvas.height / 2 }, { w: 10, h: 20 }, 'white'));
+  const player = GameObject(BoxSprite({ x: canvas.width / 2, y: canvas.height / 2 }, { x: 10, y: 20 }, 'white'));  
   player.hasGravity = true;
   const moveSpeed = 1;
-  const ground = new GameObject(createSpriteRect({ x: 0, y: canvas.height - 20 }, { w: canvas.width, h: 20 }, 'green'));
+  const ground = GameObject(BoxSprite({ x: 0, y: canvas.height - 20 }, { x: canvas.width, y: 20 }, 'green'));
   let keysPressed: { [key: string]: boolean } = {};
   const jumpStrength = 5;
   let isJumping = false;
@@ -55,12 +55,12 @@ export default function sampleScene() {
     }
 
     if (checkPlayerOnGround()) {
-      player.sprite.pos.y = canvas.height - ground.sprite.scale.h - player.sprite.scale.h;
+      player.sprite.pos.y = canvas.height - ground.sprite.scale.y - player.sprite.scale.y;
       player.velocity.y = 0;
     }
   };
 
   const checkPlayerOnGround = () => {
-    return player.sprite.pos.y + player.sprite.scale.h >= canvas.height - ground.sprite.scale.h && !isJumping;
+    return player.sprite.pos.y + player.sprite.scale.y >= canvas.height - ground.sprite.scale.y && !isJumping;
   };
 };

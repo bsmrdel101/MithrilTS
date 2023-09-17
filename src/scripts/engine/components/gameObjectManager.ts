@@ -1,17 +1,18 @@
-import { GameObject } from "./gameObject";
+const GameObjectManager = () => {
+  const objects: GameObject[] = [];
 
-
-class GameObjectManager {
-  private objects: GameObject[] = [];
-
-  add(object: GameObject) {
-    this.objects.push(object);
+  const add = (object: GameObject) => {
+    objects.push(object);
   }
 
-  getCollidableObjects(): GameObject[] {
-    return this.objects.filter((object) => object.canCollide);
+  const getCollidableObjects = (): GameObject[] => {
+    return objects.filter((obj) => obj.canCollide);
   }
-}
 
-export const gameObjectManager = new GameObjectManager();
-  
+  return {
+    add: add,
+    getCollidableObjects: getCollidableObjects,
+  };
+};
+
+export const gameObjectManager = GameObjectManager();
