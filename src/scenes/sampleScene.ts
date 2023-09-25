@@ -1,6 +1,6 @@
 import { clamp } from "../engine/engineUtils";
 import Ground from "../gameObjects/Ground";
-import Player from "../gameObjects/player";
+import Player from "../gameObjects/Player";
 
 
 export default function sampleScene() {
