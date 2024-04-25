@@ -1,6 +1,7 @@
 import { clamp } from "../utils";
 import Ground from "../gameObjects/Ground";
 import Player from "../gameObjects/Player";
+import Anim from "../engine/classes/animations/Anim";
 
 
 export default function sampleScene() {
@@ -16,6 +17,17 @@ export default function sampleScene() {
 
   const player = new Player();
   const ground = new Ground();
+  const playerIdle = new Anim({
+    spriteSheet: '/images/player_idle.png',
+    frameDuration: 1000,
+    frameWidth: 39,
+    frameHeight: 28,
+    sheetHeightOffset: 0,
+    pos: player.sprite.pos,
+    scale: { x: 39, y: 28 },
+    numFrames: 20
+  });
+  player.setAnim(playerIdle);
 
   const moveSpeed = 1;
   const maxSpeed = 30;

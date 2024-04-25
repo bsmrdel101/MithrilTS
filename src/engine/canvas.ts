@@ -16,6 +16,10 @@ const renderFunctions: Array<() => void> = [];
 const eventHandlers: { [eventType: string]: Array<(event: Event) => void> } = {};
 const keysPressed: { [key: string]: boolean } = {};
 
+let lastRenderTime = 0;
+const frameRate = 60;
+const frameDelay = 1000 / frameRate;
+
 
 export const initializeCanvas = () => {
   bgCanvas = document.getElementById('bg-canvas') as HTMLCanvasElement;
@@ -70,12 +74,16 @@ const render = (fn: () => void) => {
   renderFunctions.push(fn);
 };
 
-const drawFrame = () => {
-  if (selectedScene) selectedScene.sceneLoader();
-  const collidableObjects = gameObjectManager.getCollidableObjects();
-  collidableObjects.forEach((obj: GameObject) => obj.col.checkCollisions(collidableObjects));
-  updateFunctions.forEach((fn) => fn());
-  renderFunctions.forEach((fn) => fn());
+const drawFrame = (time: number) => {
+  const timeSinceLastRender = time - lastRenderTime;
+  if (timeSinceLastRender >= frameDelay) {
+    if (selectedScene) selectedScene.sceneLoader();
+    const collidableObjects = gameObjectManager.getCollidableObjects();
+    collidableObjects.forEach((obj: GameObject) => obj.col.checkCollisions(collidableObjects));
+    updateFunctions.forEach((fn) => fn());
+    renderFunctions.forEach((fn) => fn());
+    lastRenderTime = time;
+  }
   window.requestAnimationFrame(drawFrame);
 };
 

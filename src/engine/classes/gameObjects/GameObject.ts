@@ -1,20 +1,20 @@
+import Anim from "../animations/Anim"
 import BoxCol from "../colliders/BoxCol"
-import BoxSprite from "../sprites/BoxSprite"
-import ImgSprite from "../sprites/ImgSprite"
 import { gameObjectManager } from "./GameObjectManager"
 
 export default class GameObject {
-  sprite: ImgSprite | BoxSprite
-  col: BoxCol
-  hasGravity = false
-  weight = 0.15
-  friction = 15
-  velocity: Vec2 = { x: 0, y: 0 }
+  sprite?: Sprite;
+  col: BoxCol;
+  hasGravity = false;
+  weight = 0.15;
+  friction = 15;
+  velocity: Vec2 = { x: 0, y: 0 };
   isColliding = false;
-  readonly tags: string[]
-  onCol: (colisionPos: ColDir, obj: GameObject) => void
+  anim: Anim;
+  readonly tags: string[];
+  onCol: (colisionPos: ColDir, obj: GameObject) => void;
 
-  constructor(sprite: ImgSprite | BoxSprite, col?: BoxCol) {
+  constructor(sprite?: Sprite, col?: BoxCol) {
     this.sprite = sprite;
     this.col = col || new BoxCol();
     this.col.parent = this;
@@ -28,9 +28,17 @@ export default class GameObject {
     this.velocity.y += this.weight;
   }
 
+  setAnim(anim: Anim) {
+    this.anim = anim;
+  }
+
   draw() {
     this.applyGravity();
-    this.sprite.draw();
+    if (this.anim) {
+      this.anim.draw();
+    } else {
+      this.sprite.draw();
+    }
   };
 
   destroy() {
