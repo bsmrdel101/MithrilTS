@@ -8,7 +8,7 @@ class GameObjectManager {
   }
 
   getCollidableObjects(): GameObject[] {
-    return this.objects.filter((object) => object.collider.canCollide && !object.collider.isTrigger);
+    return this.objects.filter((object) => object.col.canCollide && !object.col.isTrigger);
   }
 
   getGameObjects(): GameObject[] {

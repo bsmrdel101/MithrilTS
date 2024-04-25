@@ -5,7 +5,7 @@ import Player from "../gameObjects/Player";
 
 export default function sampleScene() {
   update(() => {
-    handleMovement();
+    // handleMovement();
   });
   
   render(() => {

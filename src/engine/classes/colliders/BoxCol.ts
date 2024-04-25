@@ -24,10 +24,10 @@ export default class BoxCol {
     });
   }
 
-  private handleCollision(obj1: GameObject, obj2: GameObject): 'T' | 'B' | 'L' | 'R' | null {
+  private handleCollision(obj1: GameObject, obj2: GameObject): ColDir {
     const sprite1 = obj1.sprite;
     const sprite2 = obj2.sprite;
-    let colDir: 'T' | 'B' | 'L' | 'R' | null = null;
+    let colDir: ColDir = null;
   
     if (
       sprite1.pos.y + sprite1.scale.y >= sprite2.pos.y &&

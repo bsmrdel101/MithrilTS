@@ -20,3 +20,5 @@ type Border = {
 type Collision = {
   point: Vec2
 };
+
+type ColDir = 'T' | 'B' | 'L' | 'R' | null;

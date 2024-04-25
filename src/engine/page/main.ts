@@ -15,7 +15,9 @@ const loadGame = () => {
 app.innerHTML = `
   <div>
     <button class="start-game-button">Play Game</button>
-    <canvas id="canvas"></canvas>
+    <canvas id="bg-canvas"></canvas>
+    <canvas id="sm-canvas"></canvas>
+    <canvas id="px-canvas"></canvas>
   </div>
 `;
 

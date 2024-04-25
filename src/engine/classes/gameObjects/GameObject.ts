@@ -5,19 +5,19 @@ import { gameObjectManager } from "./GameObjectManager"
 
 export default class GameObject {
   sprite: ImgSprite | BoxSprite
-  collider: BoxCol
+  col: BoxCol
   hasGravity = false
   weight = 0.15
   friction = 15
   velocity: Vec2 = { x: 0, y: 0 }
   isColliding = false;
   readonly tags: string[]
-  onCol: (colisionPos: 'T' | 'B' | 'L' | 'R', obj: GameObject) => void
+  onCol: (colisionPos: ColDir, obj: GameObject) => void
 
-  constructor(sprite: ImgSprite | BoxSprite, collider?: BoxCol) {
+  constructor(sprite: ImgSprite | BoxSprite, col?: BoxCol) {
     this.sprite = sprite;
-    this.collider = collider || new BoxCol();
-    this.collider.parent = this;
+    this.col = col || new BoxCol();
+    this.col.parent = this;
     gameObjectManager.add(this);
   }
 

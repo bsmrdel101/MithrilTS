@@ -67,7 +67,7 @@ const render = (fn: () => void) => {
 const drawFrame = () => {
   if (selectedScene) selectedScene.sceneLoader();
   const collidableObjects = gameObjectManager.getCollidableObjects();
-  collidableObjects.forEach((obj: GameObject) => obj.collider.checkCollisions(collidableObjects));
+  collidableObjects.forEach((obj: GameObject) => obj.col.checkCollisions(collidableObjects));
   updateFunctions.forEach((fn) => fn());
   renderFunctions.forEach((fn) => fn());
   window.requestAnimationFrame(drawFrame);
