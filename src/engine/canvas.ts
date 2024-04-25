@@ -2,8 +2,12 @@ import { main } from "../game";
 import GameObject from "./classes/gameObjects/GameObject";
 import { gameObjectManager } from "./classes/gameObjects/GameObjectManager";
 
-export let canvas: HTMLCanvasElement;
-export let ctx: CanvasRenderingContext2D;
+export let bgCanvas: HTMLCanvasElement;
+export let smCanvas: HTMLCanvasElement;
+export let pxCanvas: HTMLCanvasElement;
+export let bgCtx: CanvasRenderingContext2D;
+export let smCtx: CanvasRenderingContext2D;
+export let pxCtx: CanvasRenderingContext2D;
 export const globals = (window as any);
 let selectedScene: any;
 
@@ -14,8 +18,12 @@ const keysPressed: { [key: string]: boolean } = {};
 
 
 export const initializeCanvas = () => {
-  canvas = document.getElementById('canvas') as HTMLCanvasElement;
-  ctx = canvas.getContext('2d');
+  bgCanvas = document.getElementById('bg-canvas') as HTMLCanvasElement;
+  smCanvas = document.getElementById('sm-canvas') as HTMLCanvasElement;
+  pxCanvas = document.getElementById('px-canvas') as HTMLCanvasElement;
+  bgCtx = bgCanvas.getContext('2d');
+  smCtx = smCanvas.getContext('2d');
+  pxCtx = pxCanvas.getContext('2d');
   resizeCanvas();
   window.addEventListener('click', handleCanvasEvent);
   window.addEventListener('dblclick', handleCanvasEvent);
@@ -24,7 +32,7 @@ export const initializeCanvas = () => {
   window.addEventListener('keydown', handleCanvasEvent);
   window.addEventListener('keyup', handleCanvasEvent);
   window.addEventListener('wheel', handleCanvasEvent);
-  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+  bgCanvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
   main();
   window.requestAnimationFrame(drawFrame);
@@ -32,11 +40,10 @@ export const initializeCanvas = () => {
 
 const resizeCanvas = () => {
   const aspectRatio = 16 / 9;
-  canvas.width *= aspectRatio - canvas.clientWidth;
-  canvas.height *= aspectRatio - canvas.clientHeight;
+  bgCanvas.width *= aspectRatio - bgCanvas.clientWidth;
+  bgCanvas.height *= aspectRatio - bgCanvas.clientHeight;
 };
 
-// If it finds the event in the eventHandlers, then run it
 const handleCanvasEvent = (event: Event | KeyboardEvent | MouseEvent) => {
   const eventType = event.type;
   if (eventHandlers[eventType]) {
@@ -47,7 +54,6 @@ const handleCanvasEvent = (event: Event | KeyboardEvent | MouseEvent) => {
   }
 };
 
-// Adds event into eventHandelers
 const onEvent = (eventType: string, fn: (event: Event) => void) => {
   if (!eventHandlers[eventType]) {
     eventHandlers[eventType] = [];
@@ -84,12 +90,16 @@ onEvent('keyup', (e: Event) => {
 const setSelectedScene = (scene: any) => selectedScene = scene;
 
 const setBackgroundColor = (color: string) => {
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  bgCtx.fillStyle = color;
+  smCtx.fillStyle = color;
+  pxCtx.fillStyle = color;
+  bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+  smCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+  pxCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
 };
 
 const getCenter = () => {
-  return { x: canvas.width / 2, y: canvas.height / 2 };
+  return { x: bgCanvas.width / 2, y: bgCanvas.height / 2 };
 };
 
 const KeyCode = {

@@ -1,4 +1,4 @@
-import { clamp } from "../engine/engineUtils";
+import { clamp } from "../utils";
 import Ground from "../gameObjects/Ground";
 import Player from "../gameObjects/Player";
 
@@ -23,10 +23,8 @@ export default function sampleScene() {
 
 
   const handleMovement = () => {
-    // Get player x velocity
     player.velocity.x = clamp(player.velocity.x + moveSpeed, 0, maxSpeed);
 
-    // Move player
     if (keysPressed['a'] || keysPressed['ArrowLeft']) {
       player.sprite.pos.x -= player.velocity.x / player.friction;
     } else if (keysPressed['d'] || keysPressed['ArrowRight']) {
